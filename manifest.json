@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Gerenciador de Abas Lite",
+  "version": "1.0",
+  "description": "Gerencie, hiberne e proteja suas abas para economizar memória.",
+  "permissions": [
+    "tabs",
+    "storage",
+    "sidePanel"
+  ],
+  "host_permissions": [],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Abrir Gerenciador"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

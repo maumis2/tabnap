@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h2>Gerenciador de Abas</h2>
+      <div class="settings-toggle">
+        <label title="Modo Escuro">
+          <input type="checkbox" id="darkModeToggle"> 🌙
+        </label>
+      </div>
+    </header>
+
+    <div class="controls">
+      <button id="btnDiscardAll" class="danger-btn">Hibernar Inativas</button>
+      <div class="stats">
+        <span id="activeCount">0</span> ativas | 
+        <span id="hibernatedCount">0</span> dormindo
+      </div>
+    </div>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Buscar abas...">
+    </div>
+
+    <ul id="tabList" class="tab-list">
+      <!-- As abas serão injetadas aqui via JS -->
+    </ul>
+  </div>
+  <script src="sidepanel.js"></script>
+</body>
+</html>
