@@ -33,3 +33,5 @@ Como esta extensão ainda não está publicada na Chrome Web Store, você pode i
 2. **Para economizar memória:** Clique no botão vermelho **"Hibernar Inativas"**. Isso suspenderá todas as abas que não estão em uso e não estão na whitelist.
 3. **Para proteger uma aba:** Clique no ícone de estrela (☆) ao lado do título da aba.
 4. **Para fechar uma aba:** Clique no "X" vermelho.
+
+Criado por Maurício Soares.
