@@ -34,4 +34,14 @@ Como esta extensão ainda não está publicada na Chrome Web Store, você pode i
 3. **Para proteger uma aba:** Clique no ícone de estrela (☆) ao lado do título da aba.
 4. **Para fechar uma aba:** Clique no "X" vermelho.
 
+## Atualização 1.1!
+
+1. Ajuste de **responsividade**.
+2. Criação dos arquivos de tradução para **Pt-BR** e **Inglês**.
+3. Ajuste das configurações de acessibilidade e personalização.
+
+## Mais Features e Atualizações em breve!
+
 Criado por Maurício Soares.
+
+
