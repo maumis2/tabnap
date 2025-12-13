@@ -1,5 +1,5 @@
 {
-  "appName": { "message": "Tab Manager Lite" },
+  "appName": { "message": "TabNap" },
   "appDesc": { "message": "Manage your tabs efficiently." },
   "searchPlaceholder": { "message": "Search tabs..." },
   "active": { "message": "active" },
