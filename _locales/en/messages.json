@@ -1,0 +1,16 @@
+{
+  "appName": { "message": "Tab Manager Lite" },
+  "appDesc": { "message": "Manage your tabs efficiently." },
+  "searchPlaceholder": { "message": "Search tabs..." },
+  "active": { "message": "active" },
+  "sleeping": { "message": "sleeping" },
+  "btnHibernate": { "message": "Hibernate Inactive" },
+  "settingsTitle": { "message": "Settings" },
+  "themeColor": { "message": "Primary Color" },
+  "fontSize": { "message": "Font Size" },
+  "small": { "message": "Small" },
+  "medium": { "message": "Medium" },
+  "large": { "message": "Large" },
+  "askDownload": { "message": "Ask where to save downloads" },
+  "openDownloads": { "message": "Open Download Manager" }
+}

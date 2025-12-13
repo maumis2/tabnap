@@ -1,0 +1,16 @@
+{
+  "appName": { "message": "Gerenciador de Abas Lite" },
+  "appDesc": { "message": "Gerencie suas abas com eficiência." },
+  "searchPlaceholder": { "message": "Buscar abas..." },
+  "active": { "message": "ativas" },
+  "sleeping": { "message": "dormindo" },
+  "btnHibernate": { "message": "Hibernar Inativas" },
+  "settingsTitle": { "message": "Configurações" },
+  "themeColor": { "message": "Cor Principal" },
+  "fontSize": { "message": "Tamanho da Fonte" },
+  "small": { "message": "Pequeno" },
+  "medium": { "message": "Médio" },
+  "large": { "message": "Grande" },
+  "askDownload": { "message": "Perguntar onde salvar downloads" },
+  "openDownloads": { "message": "Abrir Gerenciador de Downloads" }
+}

@@ -5,31 +5,50 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
+  <div class="app-container">
     <header>
-      <h2>Gerenciador de Abas</h2>
-      <div class="settings-toggle">
-        <label title="Modo Escuro">
-          <input type="checkbox" id="darkModeToggle"> 🌙
-        </label>
-      </div>
+      <h2 data-i18n="appName">Gerenciador</h2>
+      <button id="btnSettingsToggle" class="icon-btn">⚙️</button>
     </header>
 
+    <div id="settingsPanel" class="settings-panel hidden">
+      <h3 data-i18n="settingsTitle">Configurações</h3>
+      
+      <div class="setting-item">
+        <label data-i18n="themeColor">Cor Principal</label>
+        <input type="color" id="colorPicker" value="#1a73e8">
+      </div>
+
+      <div class="setting-item">
+        <label data-i18n="fontSize">Tamanho da Fonte</label>
+        <select id="fontSizeSelect">
+          <option value="12px" data-i18n="small">Pequeno</option>
+          <option value="14px" selected data-i18n="medium">Médio</option>
+          <option value="16px" data-i18n="large">Grande</option>
+        </select>
+      </div>
+
+      <div class="setting-item row">
+        <span data-i18n="askDownload">Perguntar onde salvar</span>
+        <input type="checkbox" id="askDownloadToggle">
+      </div>
+      
+      <button id="btnOpenDownloads" class="secondary-btn" data-i18n="openDownloads">Abrir Downloads</button>
+    </div>
+
     <div class="controls">
-      <button id="btnDiscardAll" class="danger-btn">Hibernar Inativas</button>
+      <button id="btnDiscardAll" class="primary-btn" data-i18n="btnHibernate">Hibernar</button>
       <div class="stats">
-        <span id="activeCount">0</span> ativas | 
-        <span id="hibernatedCount">0</span> dormindo
+        <span id="activeCount">0</span> <span data-i18n="active">ativas</span> | 
+        <span id="hibernatedCount">0</span> <span data-i18n="sleeping">dormindo</span>
       </div>
     </div>
 
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Buscar abas...">
+      <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder">
     </div>
 
-    <ul id="tabList" class="tab-list">
-      <!-- As abas serão injetadas aqui via JS -->
-    </ul>
+    <ul id="tabList" class="tab-list"></ul>
   </div>
   <script src="sidepanel.js"></script>
 </body>

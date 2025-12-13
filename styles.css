@@ -1,63 +1,125 @@
 :root {
+  --primary-color: #1a73e8;
   --bg-color: #ffffff;
   --text-color: #333333;
   --item-bg: #f9f9f9;
-  --item-hover: #f0f0f0;
   --border-color: #e0e0e0;
-  --accent-color: #1a73e8;
   --danger-color: #d93025;
-  --success-color: #188038;
+  --font-size-base: 14px;
 }
 
-body.dark-mode {
-  --bg-color: #202124;
-  --text-color: #e8eaed;
-  --item-bg: #292a2d;
-  --item-hover: #35363a;
-  --border-color: #3c4043;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #202124;
+    --text-color: #e8eaed;
+    --item-bg: #292a2d;
+    --border-color: #3c4043;
+  }
 }
 
 body {
   margin: 0;
-  padding: 16px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
-  transition: background 0.3s;
+  font-size: var(--font-size-base);
+  overflow: hidden;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
-h2 { margin: 0; font-size: 1.2rem; }
+h2 { margin: 0; font-size: 1.1rem; }
 
-.controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--text-color);
+  padding: 4px;
+  border-radius: 4px;
 }
+.icon-btn:hover { background-color: rgba(128,128,128,0.2); }
 
-.danger-btn {
-  background-color: var(--danger-color);
+.primary-btn {
+  background-color: var(--primary-color);
   color: white;
   border: none;
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.85rem;
+  flex-grow: 1;
+}
+.primary-btn:hover { opacity: 0.9; }
+
+.secondary-btn {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  width: 100%;
+  padding: 6px;
+  margin-top: 10px;
+  cursor: pointer;
 }
 
-.danger-btn:hover { opacity: 0.9; }
+.settings-panel {
+  background-color: var(--item-bg);
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+}
+.settings-panel.hidden { display: none; }
+
+.setting-item {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.setting-item.row {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+select, input[type="text"] {
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  color: var(--text-color);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
 
 .tab-list {
   list-style: none;
   padding: 0;
   margin: 0;
+  overflow-y: auto;
+  flex-grow: 1;
 }
 
 .tab-item {
@@ -66,45 +128,18 @@ h2 { margin: 0; font-size: 1.2rem; }
   background-color: var(--item-bg);
   border: 1px solid var(--border-color);
   padding: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   border-radius: 6px;
-  transition: all 0.2s;
+  cursor: pointer;
 }
 
-.tab-item:hover { background-color: var(--item-hover); }
-
 .tab-item.discarded { opacity: 0.6; }
-.tab-item.active-tab { border-left: 4px solid var(--accent-color); }
+.tab-item.active-tab { border-left: 4px solid var(--primary-color); }
 
 .tab-info {
   flex-grow: 1;
   overflow: hidden;
-  margin-left: 8px;
-  margin-right: 8px;
-}
-
-.tab-title {
+  margin: 0 8px;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 0.9rem;
-  display: block;
 }
-
-.tab-status {
-  font-size: 0.75rem;
-  color: #888;
-}
-
-.actions { display: flex; gap: 5px; }
-
-.icon-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.1rem;
-  padding: 4px;
-  border-radius: 4px;
-}
-
-.icon-btn:hover { background-color: rgba(0,0,0,0.1); }
