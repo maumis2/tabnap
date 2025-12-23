@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <title>Bloqueado</title>
+</head>
+<body>
+  <div class="app-container" style="align-items:center;justify-content:center;">
+    <div style="max-width:420px;width:100%;text-align:center;background:var(--item-bg);padding:20px;border-radius:12px;border:1px solid var(--border-color);box-shadow:var(--shadow-sm)">
+      <h2>Site Bloqueado</h2>
+      <p id="siteInfo" style="color:var(--muted-text)"></p>
+      <input id="unlockPassword" type="password" placeholder="Digite a senha para desbloquear" style="width:100%;margin-top:12px;padding:10px;border-radius:8px;border:1px solid var(--border-color)" />
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button id="btnUnlock" class="primary-btn" style="flex:1">Desbloquear</button>
+        <button id="btnOpenExternal" class="secondary-btn" style="flex:0 0 auto">Abrir em nova aba</button>
+      </div>
+      <p id="message" style="color:var(--danger-color);margin-top:10px;min-height:18px"></p>
+    </div>
+  </div>
+  <script src="blocked.js"></script>
+</body>
+</html>

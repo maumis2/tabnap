@@ -33,7 +33,24 @@
         <input type="checkbox" id="askDownloadToggle">
       </div>
       
-      <button id="btnOpenDownloads" class="secondary-btn" data-i18n="openDownloads">Abrir Downloads</button>
+      <details id="lockDetails" class="setting-item" style="padding:8px;border-radius:8px;border:1px solid var(--border-color);background:var(--item-bg)">
+        <summary style="cursor:pointer;font-weight:600;">Bloqueio de Sites</summary>
+        <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px">
+          <label data-i18n="setPassword">Definir/Alterar Senha</label>
+          <input type="password" id="lockPasswordInput" placeholder="----" />
+          <input type="password" id="lockPasswordConfirm" placeholder="Confirmar senha (vazio para remover)" />
+          <button id="btnSavePassword" class="secondary-btn" data-i18n="savePassword">Salvar Senha</button>
+
+          <label data-i18n="blockedSites">Sites Bloqueados (domínio)</label>
+          <div style="display:flex;gap:8px">
+            <input type="text" id="blockedSiteInput" placeholder="ex: example.com" />
+            <button id="btnAddBlocked" class="secondary-btn" style="flex:0 0 auto;">Adicionar</button>
+          </div>
+          <ul id="blockedList" style="margin-top:8px;padding-left:16px"></ul>
+        </div>
+      </details>
+      
+  <button id="btnOpenDownloads" class="secondary-btn full-width" data-i18n="openDownloads">Abrir Downloads</button>
     </div>
 
     <div class="controls">

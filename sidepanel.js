@@ -5,6 +5,8 @@ let userConfig = {
   askDownload: false
 };
 
+let blockedSites = [];
+
 const tabList = document.getElementById('tabList');
 const searchInput = document.getElementById('searchInput');
 const settingsPanel = document.getElementById('settingsPanel');
@@ -25,11 +27,17 @@ async function loadSettings() {
   whitelist = data.whitelist || [];
   if (data.config) userConfig = { ...userConfig, ...data.config };
 
+  const extra = await chrome.storage.sync.get(['blockedSites','lockPassword']);
+  blockedSites = extra.blockedSites || [];
+
   applyTheme();
   
   document.getElementById('colorPicker').value = userConfig.primaryColor;
   document.getElementById('fontSizeSelect').value = userConfig.fontSize;
   document.getElementById('askDownloadToggle').checked = userConfig.askDownload;
+
+  document.getElementById('blockedSiteInput').value = '';
+  renderBlockedList();
 }
 
 function applyTheme() {
@@ -41,11 +49,17 @@ function applyTheme() {
 function applyTranslations() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
-    el.textContent = chrome.i18n.getMessage(key);
+    try{
+      const msg = chrome.i18n.getMessage(key);
+      if(msg) el.textContent = msg;
+    }catch(e){}
   });
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     const key = el.getAttribute('data-i18n-placeholder');
-    el.placeholder = chrome.i18n.getMessage(key);
+    try{
+      const msg = chrome.i18n.getMessage(key);
+      if(msg) el.placeholder = msg;
+    }catch(e){}
   });
 }
 
@@ -66,6 +80,44 @@ function setupEventListeners() {
     chrome.tabs.create({ url: 'chrome://downloads' });
   };
 
+  
+  const btnSavePassword = document.getElementById('btnSavePassword');
+  if(btnSavePassword){
+    btnSavePassword.onclick = async () => {
+      const pass = document.getElementById('lockPasswordInput').value;
+      const passConfirm = document.getElementById('lockPasswordConfirm').value;
+      if(!pass && !passConfirm){
+        await chrome.storage.sync.remove('lockPassword');
+        alert('Senha removida');
+        document.getElementById('lockPasswordInput').value = '';
+        document.getElementById('lockPasswordConfirm').value = '';
+        return;
+      }
+      if(pass !== passConfirm){ alert('As senhas não coincidem'); return; }
+      const saltArr = crypto.getRandomValues(new Uint8Array(16));
+      const saltHex = bufToHex(saltArr.buffer);
+  const iterations = 100000;
+      const derived = await derivePBKDF2(pass, saltHex, iterations);
+      await chrome.storage.sync.set({ lockPassword: { salt: saltHex, hash: derived, iterations } });
+      document.getElementById('lockPasswordInput').value = '';
+      document.getElementById('lockPasswordConfirm').value = '';
+      alert('Senha salva');
+    };
+  }
+
+  const btnAddBlocked = document.getElementById('btnAddBlocked');
+  if(btnAddBlocked){
+    btnAddBlocked.onclick = async () => {
+      const val = document.getElementById('blockedSiteInput').value.trim();
+      if(!val) return;
+      const host = val.replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0];
+      if(!blockedSites.includes(host)) blockedSites.push(host);
+      await chrome.storage.sync.set({ blockedSites });
+      document.getElementById('blockedSiteInput').value = '';
+      renderBlockedList();
+    };
+  }
+
   document.getElementById('btnDiscardAll').onclick = discardAllInactive;
   searchInput.addEventListener('input', updateTabList);
 }
@@ -74,6 +126,86 @@ async function saveConfig(key, value) {
   userConfig[key] = value;
   applyTheme();
   await chrome.storage.sync.set({ config: userConfig });
+}
+
+function renderBlockedList(){
+  const ul = document.getElementById('blockedList');
+  if(!ul) return;
+  ul.innerHTML = '';
+  blockedSites.forEach(host => {
+    const li = document.createElement('li');
+    li.style.display = 'flex'; li.style.justifyContent = 'space-between'; li.style.alignItems = 'center';
+    li.style.marginBottom = '6px';
+    const span = document.createElement('span'); span.textContent = host;
+    const btns = document.createElement('div'); btns.style.display='flex'; btns.style.gap='8px';
+    const btnBlock = document.createElement('button'); btnBlock.className='secondary-btn'; btnBlock.textContent='Bloquear agora';
+    btnBlock.onclick = (e)=>{ e.stopPropagation(); blockSiteNow(host); };
+    const btnRemove = document.createElement('button'); btnRemove.className='secondary-btn'; btnRemove.textContent='Remover';
+    btnRemove.onclick = async (e)=>{ e.stopPropagation(); blockedSites = blockedSites.filter(h=>h!==host); await chrome.storage.sync.set({blockedSites}); renderBlockedList(); };
+    btns.appendChild(btnBlock); btns.appendChild(btnRemove);
+    li.appendChild(span); li.appendChild(btns);
+    ul.appendChild(li);
+  });
+}
+
+async function hashPassword(password){
+  const enc = new TextEncoder();
+  const buf = await crypto.subtle.digest('SHA-256', enc.encode(password));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function verifyPassword(password){
+  const data = await chrome.storage.sync.get('lockPassword');
+  const stored = data.lockPassword;
+  if(!stored) return false;
+  if(typeof stored === 'string'){
+    const h = await hashPassword(password);
+    return h === stored;
+  }
+  const { salt, hash, iterations } = stored;
+  if(!salt || !hash) return false;
+  const derived = await derivePBKDF2(password, salt, iterations || 100000);
+  return derived === hash;
+}
+
+function bufToHex(buffer){
+  return Array.from(new Uint8Array(buffer)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function hexToBuf(hex){
+  const bytes = new Uint8Array(hex.match(/.{1,2}/g).map(b=>parseInt(b,16)));
+  return bytes.buffer;
+}
+
+async function derivePBKDF2(password, saltHex, iterations=100000){
+  const enc = new TextEncoder();
+  const passKey = await crypto.subtle.importKey('raw', enc.encode(password), {name:'PBKDF2'}, false, ['deriveBits']);
+  const saltBuf = hexToBuf(saltHex);
+  const derivedBits = await crypto.subtle.deriveBits({name:'PBKDF2', salt: saltBuf, iterations, hash: 'SHA-256'}, passKey, 256);
+  return bufToHex(derivedBits);
+}
+
+async function blockSiteNow(host){
+  const tabs = await chrome.tabs.query({currentWindow:true});
+  for(const tab of tabs){
+    try{
+      const url = new URL(tab.url);
+      const hostname = url.hostname.replace(/^www\./,'');
+      if(isHostBlockedByEntry(hostname, host)){
+        const target = chrome.runtime.getURL('blocked.html') + `?orig=${encodeURIComponent(tab.url)}&tabId=${tab.id}`;
+        await chrome.tabs.update(tab.id, { url: target });
+      }
+    }catch(e){}
+  }
+}
+
+function isHostBlockedByEntry(hostname, entry){
+  if(!hostname || !entry) return false;
+  if(entry.startsWith('*.')) entry = entry.slice(2);
+  if(entry.startsWith('.')) entry = entry.slice(1);
+  if(hostname === entry) return true;
+  if(hostname.endsWith('.' + entry)) return true;
+  return false;
 }
 
 async function updateTabList() {
